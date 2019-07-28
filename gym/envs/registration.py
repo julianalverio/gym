@@ -129,7 +129,8 @@ class EnvRegistry(object):
         # compatibility code to be invoked.
         if hasattr(env, "_reset") and hasattr(env, "_step") and not getattr(env, "_gym_disable_underscore_compat", False):
             patch_deprecated_methods(env)
-        if (env.spec.timestep_limit is not None) and not spec.tags.get('vnc'):
+        # if (env.spec.timestep_limit is not None) and not spec.tags.get('vnc'):
+        if 1:
             from gym.wrappers.time_limit import TimeLimit
             env = TimeLimit(env,
                             max_episode_steps=env.spec.max_episode_steps,
