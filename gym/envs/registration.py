@@ -1,6 +1,9 @@
 import pkg_resources
 import re
 from gym import error, logger
+from gym.envs.robotics.fetch.push import FetchPushEnv
+from gym.envs.robotics.fetch.pick_and_place import FetchPickAndPlaceEnv
+from gym.envs.robotics.fetch.reach import FetchReachEnv
 
 # This format is true today, but it's *not* an official spec.
 # [username/](env-name)-v(version)    env-name is group 1, version is group 2
@@ -113,10 +116,13 @@ class EnvRegistry(object):
     def __init__(self):
         self.env_specs = {}
 
-    def make(self, id):
+    def make(self, id, reward_type):
         logger.info('Making new env: %s', id)
         spec = self.spec(id)
-        env = spec.make()
+        if 'Fetch' in id:
+            make_fetch(reward_type)
+        else:
+            env = spec.make()
         # We used to have people override _reset/_step rather than
         # reset/step. Set _gym_disable_underscore_compat = True on
         # your environment if you use these methods and don't want
@@ -130,6 +136,17 @@ class EnvRegistry(object):
                             max_episode_seconds=env.spec.max_episode_seconds)
         return env
 
+    def make_fetch(self, id, reward_type):
+        if reward_type != 'visual':
+            reward_type = 'sparse'
+        if id == 'FetchReach-v1':
+            return FetchReachEnv(reward_type=reward_type)
+        if id == 'FetchPush-v1':
+            return FetchPushEnv(reward_type=reward_type)
+        if id == 'FetchPickAndPlace-v1':
+            return FetchPickAndPlaceEnv(reward_type=reward_type)
+        else:
+            raise TypeError('Bad Id: %s' % id)
 
     def all(self):
         return self.env_specs.values()
@@ -163,8 +180,8 @@ registry = EnvRegistry()
 def register(id, **kwargs):
     return registry.register(id, **kwargs)
 
-def make(id):
-    return registry.make(id)
+def make(id, reward_type):
+    return registry.make(id, reward_type)
 
 def spec(id):
     return registry.spec(id)
