@@ -13,7 +13,7 @@ except ImportError as e:
 
 
 class RobotEnv(gym.GoalEnv):
-    def __init__(self, model_path, initial_qpos, n_actions, n_substeps):
+    def __init__(self, model_path, initial_qpos, n_actions, n_substeps, reward_type):
         if model_path.startswith('/'):
             fullpath = model_path
         else:
@@ -42,6 +42,8 @@ class RobotEnv(gym.GoalEnv):
             achieved_goal=spaces.Box(-np.inf, np.inf, shape=obs['achieved_goal'].shape, dtype='float32'),
             observation=spaces.Box(-np.inf, np.inf, shape=obs['observation'].shape, dtype='float32'),
         ))
+        self.frames = []
+        self.reward_type = reward_type
 
     @property
     def dt(self):
@@ -65,7 +67,11 @@ class RobotEnv(gym.GoalEnv):
         info = {
             'is_success': self._is_success(obs['achieved_goal'], self.goal),
         }
+
+        if self.reward_type == 'visual':
+            self.frames.append(self.render(mode='rgb_array'))
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
+
         return obs, reward, done, info
 
     def reset(self):
