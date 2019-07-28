@@ -120,7 +120,7 @@ class EnvRegistry(object):
         logger.info('Making new env: %s', id)
         spec = self.spec(id)
         if 'Fetch' in id:
-            make_fetch(reward_type)
+            self.make_fetch(reward_type)
         else:
             env = spec.make()
         # We used to have people override _reset/_step rather than
