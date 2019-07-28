@@ -121,6 +121,7 @@ class EnvRegistry(object):
         spec = self.spec(id)
         if 'Fetch' in id:
             env = self.make_fetch(id, reward_type)
+            env.spec = spec
         else:
             env = spec.make()
         # We used to have people override _reset/_step rather than
@@ -129,8 +130,7 @@ class EnvRegistry(object):
         # compatibility code to be invoked.
         if hasattr(env, "_reset") and hasattr(env, "_step") and not getattr(env, "_gym_disable_underscore_compat", False):
             patch_deprecated_methods(env)
-        # if (env.spec.timestep_limit is not None) and not spec.tags.get('vnc'):
-        if 1:
+        if (env.spec.timestep_limit is not None) and not spec.tags.get('vnc'):
             from gym.wrappers.time_limit import TimeLimit
             env = TimeLimit(env,
                             max_episode_steps=env.spec.max_episode_steps,
