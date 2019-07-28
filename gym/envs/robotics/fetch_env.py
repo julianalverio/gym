@@ -4,7 +4,7 @@ from gym.envs.robotics import rotations, robot_env, utils
 
 import sys
 sys.path.insert(0, '/storage/jalverio/sentence-tracker/st')
-# from st import load_model
+from st import load_model
 
 def goal_distance(goal_a, goal_b):
     assert goal_a.shape == goal_b.shape
@@ -46,7 +46,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
 
-        # self.model = load_model(robot=True)
+        self.model = load_model(robot=True)
 
         super(FetchEnv, self).__init__(
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
