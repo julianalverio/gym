@@ -58,6 +58,7 @@ class FetchEnv(robot_env.RobotEnv):
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
             frames = np.array(self.frames)
+            import pdb; pdb.set_trace()
 
         else:
             return -d
