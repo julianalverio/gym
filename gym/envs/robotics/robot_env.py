@@ -11,6 +11,8 @@ try:
 except ImportError as e:
     raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
 
+DEFAULT_SIZE=500
+
 
 class RobotEnv(gym.GoalEnv):
     def __init__(self, model_path, initial_qpos, n_actions, n_substeps, reward_type):
@@ -116,7 +118,6 @@ class RobotEnv(gym.GoalEnv):
     #         self._viewer_setup()
     #     return self.viewer
 
-DEFAULT_SIZE=500
 
     def render(self, mode='human', width=DEFAULT_SIZE, height=DEFAULT_SIZE):
         self._render_callback()
