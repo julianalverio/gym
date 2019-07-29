@@ -5,7 +5,7 @@ from gym.envs.robotics import rotations, robot_env, utils
 import sys
 sys.path.insert(0, '/storage/jalverio/sentence-tracker/st')
 sys.path.insert(0, '/storage/jalverio/sentence-tracker/st/darknet')
-# from st import load_model
+from st import load_model
 
 def goal_distance(goal_a, goal_b):
     assert goal_a.shape == goal_b.shape
