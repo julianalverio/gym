@@ -11,7 +11,7 @@ try:
 except ImportError as e:
     raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
 
-DEFAULT_SIZE=500
+DEFAULT_SIZE = 500
 
 
 class RobotEnv(gym.GoalEnv):
@@ -75,6 +75,9 @@ class RobotEnv(gym.GoalEnv):
         }
 
         self.render(mode='human')
+        from PIL import Image
+        Image.fromarray(self.render(mode='rgb_array')).show()
+        import pdb; pdb.set_trace()
 
         if self.reward_type == 'visual':
             self.frames.append(self.render(mode='rgb_array'))
