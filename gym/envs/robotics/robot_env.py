@@ -74,11 +74,6 @@ class RobotEnv(gym.GoalEnv):
             'is_success': self._is_success(obs['achieved_goal'], self.goal),
         }
 
-        self.render(mode='human')
-        from PIL import Image
-        Image.fromarray(self.render(mode='rgb_array')).show()
-        import pdb; pdb.set_trace()
-
         if self.reward_type == 'visual':
             self.frames.append(self.render(mode='rgb_array'))
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
