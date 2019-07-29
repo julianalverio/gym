@@ -62,13 +62,29 @@ class FetchEnv(robot_env.RobotEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            frames = np.array(self.frames)
+            frames = np.array(self.sample_frames(self.frames))
             import pdb; pdb.set_trace()
+
             result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
             import pdb; pdb.set_trace()
 
         else:
             return -d
+
+    def sample_frames(self, frames, n=8):
+        if len(frames <= n):
+            for _ in range(n - len(frames)):
+                frames.append(frames[-1])
+            assert len(frames) == n
+            return frames
+        else:
+            bin_width = int(len(frames) / n-1)
+            idxs = bin_width * np.array(list(range(n)))
+            sampled_frames = []
+            for idx in idxs:
+                sampled_frames.append(frames[idx])
+            assert len(sampled_frames) == n
+            return sampled_frames
 
     # RobotEnv methods
     # ----------------------------
