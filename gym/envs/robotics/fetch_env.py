@@ -72,7 +72,7 @@ class FetchEnv(robot_env.RobotEnv):
             return -d
 
     def sample_frames(self, frames, n=8):
-        if len(frames <= n):
+        if len(frames) <= n:
             for _ in range(n - len(frames)):
                 frames.append(frames[-1])
             assert len(frames) == n
