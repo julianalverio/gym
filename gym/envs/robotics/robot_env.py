@@ -73,7 +73,6 @@ class RobotEnv(gym.GoalEnv):
         }
 
         self.render(mode='human')
-        import pdb; pdb.set_trace()
 
         if self.reward_type == 'visual':
             self.frames.append(self.render(mode='rgb_array'))
