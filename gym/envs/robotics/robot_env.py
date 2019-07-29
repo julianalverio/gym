@@ -102,7 +102,7 @@ class RobotEnv(gym.GoalEnv):
     def render(self, mode='human'):
         self._render_callback()
         if mode == 'rgb_array':
-            self._get_viewer(mode).render()
+            self._get_viewer().render()
             # window size used for old mujoco-py:
             width, height = 500, 500
             data = self._get_viewer().read_pixels(width, height, depth=False)
@@ -111,22 +111,22 @@ class RobotEnv(gym.GoalEnv):
         elif mode == 'human':
             self._get_viewer().render()
 
-    # def _get_viewer(self):
-    #     if self.viewer is None:
-    #         self.viewer = mujoco_py.MjViewer(self.sim)
-    #         self._viewer_setup()
-    #     return self.viewer
-
-    def _get_viewer(self, mode):
-        self.viewer = self._viewers.get(mode)
+    def _get_viewer(self):
         if self.viewer is None:
-            if mode == 'human':
-                self.viewer = mujoco_py.MjViewer(self.sim)
-            elif mode == 'rgb_array':
-                self.viewer = mujoco_py.MjRenderContextOffscreen(self.sim, device_id=-1)
+            self.viewer = mujoco_py.MjViewer(self.sim)
             self._viewer_setup()
-            self._viewers[mode] = self.viewer
         return self.viewer
+
+    # def _get_viewer(self, mode):
+    #     self.viewer = self._viewers.get(mode)
+    #     if self.viewer is None:
+    #         if mode == 'human':
+    #             self.viewer = mujoco_py.MjViewer(self.sim)
+    #         elif mode == 'rgb_array':
+    #             self.viewer = mujoco_py.MjRenderContextOffscreen(self.sim, device_id=-1)
+    #         self._viewer_setup()
+    #         self._viewers[mode] = self.viewer
+    #     return self.viewer
 
     # Extension methods
     # ----------------------------
