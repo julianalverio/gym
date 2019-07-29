@@ -133,20 +133,20 @@ class FetchEnv(robot_env.RobotEnv):
 
     def _viewer_setup(self):
 
-        # self.viewer.cam.lookat[0] = 1.34184371
-        # self.viewer.cam.lookat[1] = 0.74910048
-        # self.viewer.cam.lookat[2] = 0.53471723
-        # self.viewer.cam.azimuth = 180.
-        # self.viewer.cam.elevation = 0.
-        # self.viewer.cam.distance = 0.8
+        self.viewer.cam.lookat[0] = 1.34184371
+        self.viewer.cam.lookat[1] = 0.74910048
+        self.viewer.cam.lookat[2] = 0.53471723
+        self.viewer.cam.azimuth = 180.
+        self.viewer.cam.elevation = 0.
+        self.viewer.cam.distance = 0.8
 
-        body_id = self.sim.model.body_name2id('robot0:gripper_link')
-        lookat = self.sim.data.body_xpos[body_id]
-        for idx, value in enumerate(lookat):
-            self.viewer.cam.lookat[idx] = value
-        self.viewer.cam.distance = 2.5
-        self.viewer.cam.azimuth = 132.
-        self.viewer.cam.elevation = -14.
+        # body_id = self.sim.model.body_name2id('robot0:gripper_link')
+        # lookat = self.sim.data.body_xpos[body_id]
+        # for idx, value in enumerate(lookat):
+        #     self.viewer.cam.lookat[idx] = value
+        # self.viewer.cam.distance = 2.5
+        # self.viewer.cam.azimuth = 132.
+        # self.viewer.cam.elevation = -14.
 
     def _render_callback(self):
         # Visualize target.
