@@ -44,6 +44,10 @@ class RobotEnv(gym.GoalEnv):
         ))
         self.frames = []
         self.reward_type = reward_type
+        self._viewers = {
+            'human': None,
+            'rgb_array': None
+        }
 
     @property
     def dt(self):
@@ -107,10 +111,21 @@ class RobotEnv(gym.GoalEnv):
         elif mode == 'human':
             self._get_viewer().render()
 
-    def _get_viewer(self):
+    # def _get_viewer(self):
+    #     if self.viewer is None:
+    #         self.viewer = mujoco_py.MjViewer(self.sim)
+    #         self._viewer_setup()
+    #     return self.viewer
+
+    def _get_viewer(self, mode):
+        self.viewer = self._viewers.get(mode)
         if self.viewer is None:
-            self.viewer = mujoco_py.MjViewer(self.sim)
+            if mode == 'human':
+                self.viewer = mujoco_py.MjViewer(self.sim)
+            elif mode == 'rgb_array':
+                self.viewer = mujoco_py.MjRenderContextOffscreen(self.sim, device_id=-1)
             self._viewer_setup()
+            self._viewers[mode] = self.viewer
         return self.viewer
 
     # Extension methods
