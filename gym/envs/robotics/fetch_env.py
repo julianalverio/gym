@@ -64,7 +64,11 @@ class FetchEnv(robot_env.RobotEnv):
         elif self.reward_type == 'visual':
             frames = np.array(self.sample_frames(self.frames))
 
-            result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
+            try:
+                result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
+            except:
+                print('INCOMPLETE TRACK EXCEPTION')
+                return np.float32(0.)
             threshold = -10000
             if np.any(result.results[-1].final_state_likelihoods < threshold):
                 return np.float32(0.)
