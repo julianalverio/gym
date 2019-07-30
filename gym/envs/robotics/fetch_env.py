@@ -63,11 +63,17 @@ class FetchEnv(robot_env.RobotEnv):
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
             frames = np.array(self.sample_frames(self.frames))
-            import pdb; pdb.set_trace()
 
             result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
+            threshold = -10000
             import pdb; pdb.set_trace()
-
+            if np.any(result.results[-1].final_state_likelihoods < threshold):
+                return np.array(0.)
+            else:
+                state = np.argmax(result.results[-1].final_state_likelihoods)
+                num_states = result.results[-1].num_states
+                reward = state / (num_states - 1)
+                return np.array(float(reward))
         else:
             return -d
 
