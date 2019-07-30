@@ -66,14 +66,13 @@ class FetchEnv(robot_env.RobotEnv):
 
             result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
             threshold = -10000
-            import pdb; pdb.set_trace()
             if np.any(result.results[-1].final_state_likelihoods < threshold):
-                return np.array(0.)
+                return np.float32(0.)
             else:
                 state = np.argmax(result.results[-1].final_state_likelihoods)
                 num_states = result.results[-1].num_states
                 reward = state / (num_states - 1)
-                return np.array(float(reward))
+                return np.float32(float(reward))
         else:
             return -d
 
