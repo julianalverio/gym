@@ -1,7 +1,9 @@
 import numpy as np
 
 from gym.envs.robotics import rotations, robot_env, utils
-
+import sys
+sys.path.insert(0, '/storage/jalverio/sentence-tracker/st')
+from st import load_model
 
 def goal_distance(goal_a, goal_b):
     assert goal_a.shape == goal_b.shape
@@ -43,6 +45,8 @@ class FetchEnv(robot_env.RobotEnv):
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
 
+        self.model = load_model(robot=True)
+
         super(FetchEnv, self).__init__(
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
             initial_qpos=initial_qpos)
@@ -55,8 +59,40 @@ class FetchEnv(robot_env.RobotEnv):
         d = goal_distance(achieved_goal, goal)
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
+        elif self.reward_type == 'visual':
+            frames = np.array(self.sample_frames(self.frames))
+
+            try:
+                result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
+            except:
+                print('INCOMPLETE TRACK EXCEPTION')
+                self.render(mode='human')
+                return np.float32(0.)
+            threshold = -10000
+            if np.any(result.results[-1].final_state_likelihoods < threshold):
+                return np.float32(0.)
+            else:
+                state = np.argmax(result.results[-1].final_state_likelihoods)
+                num_states = result.results[-1].num_states
+                reward = state / (num_states - 1)
+                return np.float32(float(reward))
         else:
             return -d
+
+    def sample_frames(self, frames, n=8):
+        if len(frames) <= n:
+            for _ in range(n - len(frames)):
+                frames.append(frames[-1])
+            assert len(frames) == n
+            return frames
+        else:
+            bin_width = int(len(frames) / n-1)
+            idxs = bin_width * np.array(list(range(n)))
+            sampled_frames = []
+            for idx in idxs:
+                sampled_frames.append(frames[idx])
+            assert len(sampled_frames) == n
+            return sampled_frames
 
     # RobotEnv methods
     # ----------------------------
@@ -121,19 +157,19 @@ class FetchEnv(robot_env.RobotEnv):
         }
 
     def _viewer_setup(self):
-        body_id = self.sim.model.body_name2id('robot0:gripper_link')
-        lookat = self.sim.data.body_xpos[body_id]
-        for idx, value in enumerate(lookat):
-            self.viewer.cam.lookat[idx] = value
-        self.viewer.cam.distance = 2.5
-        self.viewer.cam.azimuth = 132.
-        self.viewer.cam.elevation = -14.
+        self.viewer.cam.lookat[0] = 1.34184371
+        self.viewer.cam.lookat[1] = 0.74910048
+        self.viewer.cam.lookat[2] = 0.53471723
+        self.viewer.cam.azimuth = 180.
+        self.viewer.cam.elevation = 0.
+        self.viewer.cam.distance = 0.8
 
     def _render_callback(self):
         # Visualize target.
         sites_offset = (self.sim.data.site_xpos - self.sim.model.site_pos).copy()
         site_id = self.sim.model.site_name2id('target0')
-        self.sim.model.site_pos[site_id] = self.goal - sites_offset[0]
+        # self.sim.model.site_pos[site_id] = self.goal - sites_offset[0]
+        self.sim.model.site_pos[site_id] = np.array([50., 50., 50.])
         self.sim.forward()
 
     def _reset_sim(self):
