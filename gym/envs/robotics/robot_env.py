@@ -14,7 +14,7 @@ except ImportError as e:
 DEFAULT_SIZE = 500
 
 class RobotEnv(gym.GoalEnv):
-    def __init__(self, model_path, initial_qpos, n_actions, n_substeps, reward_type):
+    def __init__(self, model_path, initial_qpos, n_actions, n_substeps, reward_type='sparse'):
         if model_path.startswith('/'):
             fullpath = model_path
         else:
