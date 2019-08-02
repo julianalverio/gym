@@ -3,6 +3,10 @@ import importlib
 import warnings
 
 from gym import error, logger
+from gym.envs.robotics.fetch.push import FetchPushEnv
+from gym.envs.robotics.fetch.reach import FetchReachEnv
+from gym.envs.robotics.fetch.pick_and_place import FetchPickAndPlaceEnv
+
 
 # This format is true today, but it's *not* an official spec.
 # [username/](env-name)-v(version)    env-name is group 1, version is group 2
@@ -92,13 +96,11 @@ class EnvRegistry(object):
     def __init__(self):
         self.env_specs = {}
 
-    def make(self, path, **kwargs):
-        if len(kwargs) > 0:
-            logger.info('Making new env: %s (%s)', path, kwargs)
-        else:
-            logger.info('Making new env: %s', path)
+    def make(self, path, reward_type):
+        logger.info('Making new env %s with reward type %s' % (path, reward_type))
         spec = self.spec(path)
-        env = spec.make(**kwargs)
+        env = self.build_env(path, reward_type)
+        env.spec = spec
         # We used to have people override _reset/_step rather than
         # reset/step. Set _gym_disable_underscore_compat = True on
         # your environment if you use these methods and don't want
@@ -109,6 +111,16 @@ class EnvRegistry(object):
             from gym.wrappers.time_limit import TimeLimit
             env = TimeLimit(env, max_episode_steps=env.spec.max_episode_steps)
         return env
+
+    def build_env(self, env_type, reward_type):
+        if env_type == 'FetchReach-v1':
+            return FetchReachEnv(reward_type=reward_type)
+        elif env_type == 'FetchPush-v1':
+            return FetchPushEnv(reward_type=reward_type)
+        elif env_type == 'FetchPickAndPlace-v1':
+            return FetchPickAndPlaceEnv(reward_type=reward_type)
+        else:
+            raise NotImplementedError
 
     def all(self):
         return self.env_specs.values()
@@ -152,8 +164,8 @@ registry = EnvRegistry()
 def register(id, **kwargs):
     return registry.register(id, **kwargs)
 
-def make(id, **kwargs):
-    return registry.make(id, **kwargs)
+def make(id, reward_type):
+    return registry.make(id, reward_type)
 
 def spec(id):
     return registry.spec(id)
