@@ -46,7 +46,6 @@ class RobotEnv(gym.GoalEnv):
         ))
         self.frames = []
         self.reward_type = reward_type
-        print('reward type:', reward_type)
 
     @property
     def dt(self):
