@@ -63,7 +63,9 @@ class FetchEnv(robot_env.RobotEnv):
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
             if len(self.frames) <= 8:
+                print('short')
                 return np.float32(0.)
+            print('long')
 
             frames = np.array(self.sample_frames(self.frames))
             try:
