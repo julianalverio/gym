@@ -65,22 +65,28 @@ class FetchEnv(robot_env.RobotEnv):
             if len(self.frames) <= 8:
                 print('short')
                 return np.float32(0.)
-            print('long')
 
             frames = np.array(self.sample_frames(self.frames))
+            print('long')
             try:
+                print('here 1')
                 result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
+                print('here 2')
             except:
                 print('INCOMPLETE TRACK EXCEPTION')
                 self.render(mode='human')
                 return np.float32(0.)
             threshold = -10000
+            print('here 3')
             if np.any(result.results[-1].final_state_likelihoods < threshold):
+                print('here 4')
                 return np.float32(0.)
             else:
+                print('here 5')
                 state = np.argmax(result.results[-1].final_state_likelihoods)
                 num_states = result.results[-1].num_states
                 reward = state / (num_states - 1)
+                print('here 6')
                 return np.float32(float(reward))
         else:
             return -d
