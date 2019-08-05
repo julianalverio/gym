@@ -64,10 +64,11 @@ class FetchEnv(robot_env.RobotEnv):
         elif self.reward_type == 'visual':
             if len(self.frames) <= 8:
                 return np.float32(0.)
-            else:
-                return np.float32(0.)
+            # else:
+            #     return np.float32(0.)
 
             frames = np.array(self.sample_frames(self.frames))
+            print(frames.shape)
             try:
                 result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
             except:
@@ -87,19 +88,13 @@ class FetchEnv(robot_env.RobotEnv):
             return -d
 
     def sample_frames(self, frames, n=8):
-        if len(frames) <= n:
-            for _ in range(n - len(frames)):
-                frames.append(frames[-1])
-            assert len(frames) == n
-            return frames
-        else:
-            bin_width = int(len(frames) / n-1)
-            idxs = bin_width * np.array(list(range(n)))
-            sampled_frames = []
-            for idx in idxs:
-                sampled_frames.append(frames[idx])
-            assert len(sampled_frames) == n
-            return sampled_frames
+        bin_width = int(len(frames) / n-1)
+        idxs = bin_width * np.array(list(range(n)))
+        sampled_frames = []
+        for idx in idxs:
+            sampled_frames.append(frames[idx])
+        assert len(sampled_frames) == n
+        return sampled_frames
 
     # RobotEnv methods
     # ----------------------------
