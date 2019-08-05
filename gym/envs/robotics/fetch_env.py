@@ -71,7 +71,6 @@ class FetchEnv(robot_env.RobotEnv):
             try:
                 result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
             except:
-                import pdb; pdb.set_trace()
                 print('INCOMPLETE TRACK EXCEPTION')
                 self.render(mode='human')
                 return np.float32(0.)
