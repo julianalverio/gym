@@ -81,8 +81,8 @@ class RobotEnv(gym.GoalEnv):
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
 
         # remove this
-        self.render(mode='human')
-        import time; time.sleep(5)
+        # self.render(mode='human')
+        # import time; time.sleep(5)
 
         return obs, reward, done, info
 
