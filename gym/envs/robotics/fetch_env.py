@@ -62,11 +62,14 @@ class FetchEnv(robot_env.RobotEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            frames = np.array(self.sample_frames(self.frames))
+            if len(self.frames) <= 8:
+                return np.float32(0.)
 
+            frames = np.array(self.sample_frames(self.frames))
             try:
                 result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
             except:
+                import pdb; pdb.set_trace()
                 print('INCOMPLETE TRACK EXCEPTION')
                 self.render(mode='human')
                 return np.float32(0.)
