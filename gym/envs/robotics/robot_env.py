@@ -82,6 +82,7 @@ class RobotEnv(gym.GoalEnv):
 
         # remove this
         self.render(mode='human')
+        print('I AM STEPPING NOW')
         import time; time.sleep(5)
 
         return obs, reward, done, info
