@@ -51,6 +51,7 @@ class RobotEnv(gym.GoalEnv):
             'rgb_array': None
         }
         self.render(mode='human')
+        import time; time.sleep(5)
 
 
     @property
