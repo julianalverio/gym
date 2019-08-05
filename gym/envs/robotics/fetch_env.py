@@ -72,7 +72,7 @@ class FetchEnv(robot_env.RobotEnv):
             except:
                 print('I AM HERE')
                 import pdb; pdb.set_trace()
-                print('INCOMPLETE TRACK EXCEPTION')
+                print('INCOMPLETE TRACK ')
                 self.render(mode='human')
                 return np.float32(0.)
             threshold = -10000
