@@ -50,8 +50,6 @@ class RobotEnv(gym.GoalEnv):
             'human': None,
             'rgb_array': None
         }
-        self.render(mode='human')
-        import time; time.sleep(5)
 
 
     @property
@@ -81,6 +79,10 @@ class RobotEnv(gym.GoalEnv):
             self.frames.append(self.render(mode='rgb_array'))
             self.render(mode='human')
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
+
+        # remove this
+        self.render(mode='human')
+        import time; time.sleep(5)
 
         return obs, reward, done, info
 
