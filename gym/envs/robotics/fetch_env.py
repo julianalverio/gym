@@ -66,13 +66,11 @@ class FetchEnv(robot_env.RobotEnv):
                 return np.float32(0.)
 
             frames = np.array(self.sample_frames(self.frames))
-            import pdb; pdb.set_trace()
             try:
                 result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
             except:
-                print('I AM HERE')
                 import pdb; pdb.set_trace()
-                print('INCOMPLETE TRACK ')
+                print('INCOMPLETE TRACK EXCEPTION')
                 self.render(mode='human')
                 return np.float32(0.)
             threshold = -10000
