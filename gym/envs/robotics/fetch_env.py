@@ -49,8 +49,8 @@ class FetchEnv(robot_env.RobotEnv):
 
         if self.reward_type == 'visual':
             self.model = load_model(robot=True)
-        else:
-            self.model = load_model(robot=True)
+        # else:
+        #     self.model = load_model(robot=True)
 
         super(FetchEnv, self).__init__(
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
