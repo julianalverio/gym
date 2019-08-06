@@ -65,6 +65,7 @@ class FetchEnv(robot_env.RobotEnv):
             print('LONG ROUTE')
 
             frames = np.array(self.sample_frames(self.frames))
+            np.save('/tmp/example_frames.npy', frames)
             data = {'images':frames.tolist()}
             result = requests.post(self.url, json=data)
             print('computing reward. Result:', result.text)
