@@ -1,5 +1,6 @@
 import numpy as np
 import requests
+import os
 
 from gym.envs.robotics import rotations, robot_env, utils
 
@@ -72,6 +73,9 @@ class FetchEnv(robot_env.RobotEnv):
             reward = float(result.text)
             if reward == -1:
                 print('INCOMPLETE TRACK EXCEPTION')
+                prefix = '/storage/jalverio/robot_images/incomplete_track_videos'
+                next_idx = max([int(x) for x in os.listdir(prefix)]) + 1
+                np.save(str(next_idx), frames)
                 reward = 0
             return np.float32(reward)
 
