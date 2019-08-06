@@ -66,10 +66,11 @@ class FetchEnv(robot_env.RobotEnv):
             frames = np.array(self.sample_frames(self.frames))
             data = {'images':frames.tolist()}
             result = requests.post(self.url, json=data)
-            import pdb; pdb.set_trace()
-
-
-
+            reward = float(result.text)
+            if reward == -1:
+                print('INCOMPLETE TRACK EXCEPTION')
+                reward = 0
+            return np.float32(reward)
 
         else:
             return -d
