@@ -1,11 +1,10 @@
 import numpy as np
+import requests
 
 from gym.envs.robotics import rotations, robot_env, utils
 
 import sys
 sys.path.insert(0, '/storage/jalverio/sentence-tracker/st')
-sys.path.insert(0, '/storage/jalverio/sentence-tracker/st/darknet')
-from st import load_model
 
 def goal_distance(goal_a, goal_b):
     assert goal_a.shape == goal_b.shape
@@ -46,11 +45,7 @@ class FetchEnv(robot_env.RobotEnv):
         self.target_range = target_range
         self.distance_threshold = distance_threshold
         self.reward_type = reward_type
-
-        if self.reward_type == 'visual':
-            self.model = load_model(robot=True)
-        # else:
-        #     self.model = load_model(robot=True)
+        self.url = 'http://baffin.csail.mit.edu:5000'
 
         super(FetchEnv, self).__init__(
             model_path=model_path, n_substeps=n_substeps, n_actions=4,
@@ -66,31 +61,16 @@ class FetchEnv(robot_env.RobotEnv):
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
             if len(self.frames) <= 8:
-                print('short')
                 return np.float32(0.)
 
             frames = np.array(self.sample_frames(self.frames))
-            print('long')
-            try:
-                print('here 1')
-                result = self.model.viterbi_given_frames("The robot picked up the cube", frames)
-                print('here 2')
-            except:
-                print('INCOMPLETE TRACK EXCEPTION')
-                self.render(mode='human')
-                return np.float32(0.)
-            threshold = -10000
-            print('here 3')
-            if np.any(result.results[-1].final_state_likelihoods < threshold):
-                print('here 4')
-                return np.float32(0.)
-            else:
-                print('here 5')
-                state = np.argmax(result.results[-1].final_state_likelihoods)
-                num_states = result.results[-1].num_states
-                reward = state / (num_states - 1)
-                print('here 6')
-                return np.float32(float(reward))
+            data = {'images':frames.tolist()}
+            result = requests.post(self.url, json=data)
+            import pdb; pdb.set_trace()
+
+
+
+
         else:
             return -d
 

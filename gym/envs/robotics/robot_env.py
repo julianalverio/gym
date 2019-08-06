@@ -51,7 +51,6 @@ class RobotEnv(gym.GoalEnv):
             'rgb_array': None
         }
 
-
     @property
     def dt(self):
         return self.sim.model.opt.timestep * self.sim.nsubsteps
