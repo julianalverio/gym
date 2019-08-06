@@ -73,9 +73,10 @@ class FetchEnv(robot_env.RobotEnv):
             reward = float(result.text)
             if reward == -1:
                 print('INCOMPLETE TRACK EXCEPTION')
-                prefix = '/storage/jalverio/robot_images/incomplete_track_videos'
+                prefix = '/storage/jalverio/robot_images/incomplete_track_videos/'
                 next_idx = max([int(x) for x in os.listdir(prefix)]) + 1
-                np.save(str(next_idx), frames)
+                np.save(prefix + str(next_idx), frames)
+                print('I just saved to', prefix+str(next_idx))
                 reward = 0
             return np.float32(reward)
 
