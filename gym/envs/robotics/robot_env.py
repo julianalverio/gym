@@ -75,14 +75,9 @@ class RobotEnv(gym.GoalEnv):
         }
 
         if self.reward_type == 'visual':
-            print('about to append frames')
-            self.frames.append(self.render(mode='rgb_array'))
-            print('done. About to render')
+            self.frames.append(self.render(mode='rgb_array').copy())
             self.render(mode='human')
-            print('done.')
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
-        print('got reward')
-
         return obs, reward, done, info
 
     def reset(self):
