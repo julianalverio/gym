@@ -63,15 +63,11 @@ class RobotEnv(gym.GoalEnv):
         return [seed]
 
     def step(self, action):
-        print('entering step')
         action = np.clip(action, self.action_space.low, self.action_space.high)
         self._set_action(action)
         self.sim.step()
-        print('updated simulation')
         self._step_callback()
-        print('did callback')
         obs = self._get_obs()
-        print('got obs')
 
         done = False
         info = {
@@ -79,11 +75,11 @@ class RobotEnv(gym.GoalEnv):
         }
 
         if self.reward_type == 'visual':
-            print('in visual reward')
+            print('about to append frames')
             self.frames.append(self.render(mode='rgb_array'))
-            print('appended frames')
+            print('done. About to render')
             self.render(mode='human')
-            print('rendered')
+            print('done.')
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
         print('got reward')
 

@@ -66,7 +66,7 @@ class FetchEnv(robot_env.RobotEnv):
             frames = np.array(self.sample_frames(self.frames))
             data = {'images':frames.tolist()}
             result = requests.post(self.url, json=data)
-            print(result.text)
+            print('compueting reward. Result:', result.text)
             reward = float(result.text)
             if reward == -1:
                 print('INCOMPLETE TRACK EXCEPTION')
