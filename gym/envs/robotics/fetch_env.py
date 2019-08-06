@@ -62,11 +62,12 @@ class FetchEnv(robot_env.RobotEnv):
         elif self.reward_type == 'visual':
             if len(self.frames) <= 8:
                 return np.float32(0.)
+            print('LONG ROUTE')
 
             frames = np.array(self.sample_frames(self.frames))
             data = {'images':frames.tolist()}
             result = requests.post(self.url, json=data)
-            print('compueting reward. Result:', result.text)
+            print('computing reward. Result:', result.text)
             reward = float(result.text)
             if reward == -1:
                 print('INCOMPLETE TRACK EXCEPTION')
