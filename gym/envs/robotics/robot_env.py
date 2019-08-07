@@ -75,8 +75,7 @@ class RobotEnv(gym.GoalEnv):
         }
 
         if self.reward_type == 'visual':
-            self.frames.append(self.render(mode='rgb_array').copy())
-            self.render(mode='human')
+            self.frames.append(self.render(mode='rgb_array'))
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
         return obs, reward, done, info
 
