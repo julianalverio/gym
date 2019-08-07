@@ -65,7 +65,6 @@ class FetchEnv(robot_env.RobotEnv):
                 return np.float32(0.)
 
             frames = np.array(self.sample_frames(self.frames))
-            # np.save('/tmp/example_frames.npy', frames)
             data = {'images':frames.tolist()}
             result = requests.post(self.url, json=data)
             reward = float(result.text)
@@ -73,10 +72,6 @@ class FetchEnv(robot_env.RobotEnv):
             Image.fromarray(self.render(mode='rgb_array')).show()
             if reward == -1:
                 print('INCOMPLETE TRACK EXCEPTION')
-                # prefix = '/storage/jalverio/robot_images/incomplete_track_videos/'
-                # next_idx = max([int(x.replace('.npy', '')) for x in os.listdir(prefix)]) + 1
-                # np.save(prefix + str(next_idx), frames)
-                # print('I just saved to', prefix+str(next_idx))
                 reward = 0
             return np.float32(reward)
 

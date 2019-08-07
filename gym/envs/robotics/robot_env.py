@@ -77,6 +77,11 @@ class RobotEnv(gym.GoalEnv):
 
         if self.reward_type == 'visual':
             self.frames.append(self.render(mode='rgb_array'))
+        prefix = '/storage/jalverio/robot_images/incomplete_track_videos/'
+        next_idx = max([int(x.replace('.npy', '')) for x in os.listdir(prefix)]) + 1
+        np.save(prefix + str(next_idx), np.array(self.frames))
+        print('I just saved to', prefix+str(next_idx))
+
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
         return obs, reward, done, info
 
