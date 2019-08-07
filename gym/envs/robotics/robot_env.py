@@ -76,7 +76,7 @@ class RobotEnv(gym.GoalEnv):
         }
 
         if self.reward_type == 'visual':
-            self.frames.append(self.render(mode='rgb_array'))
+            self.frames.append(self.render(mode='rgb_array').astype(np.uint8))
         # prefix = '/storage/jalverio/robot_images/incomplete_track_videos/'
         # next_idx = max([int(x.replace('.npy', '')) for x in os.listdir(prefix)]) + 1
         # np.save(prefix + str(next_idx), np.array(self.frames))
