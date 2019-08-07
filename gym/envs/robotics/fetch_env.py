@@ -68,6 +68,7 @@ class FetchEnv(robot_env.RobotEnv):
             data = {'images':frames.tolist()}
             result = requests.post(self.url, json=data)
             reward = float(result.text)
+            print('I got reward:', reward)
             from PIL import Image
             Image.fromarray(self.render(mode='rgb_array')).show()
             if reward == -1:
