@@ -50,6 +50,7 @@ class RobotEnv(gym.GoalEnv):
             'human': None,
             'rgb_array': None
         }
+        self.render(mode='human')
 
     @property
     def dt(self):
