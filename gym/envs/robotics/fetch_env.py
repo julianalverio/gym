@@ -69,7 +69,8 @@ class FetchEnv(robot_env.RobotEnv):
             data = {'images':frames.tolist()}
             result = requests.post(self.url, json=data)
             reward = float(result.text)
-            self.render(mode='human')
+            from PIL import Image
+            Image.fromarray(self.render(mode='rgb_array')).show()
             if reward == -1:
                 print('INCOMPLETE TRACK EXCEPTION')
                 # prefix = '/storage/jalverio/robot_images/incomplete_track_videos/'
