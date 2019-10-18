@@ -23,6 +23,11 @@ except ImportError as e:
 DEFAULT_SIZE = 500
 
 
+class ShapeHolder(object):
+    def __init__(self, shape=None):
+        self.shape = shape
+
+
 class RobotEnv(gym.GoalEnv):
     def __init__(self, gripper_extra_height, block_gripper, has_object, target_in_the_air, target_offset, obj_range,
                  target_range, distance_threshold, reward_type, model_path, n_substeps, n_actions, initial_qpos):
@@ -61,6 +66,8 @@ class RobotEnv(gym.GoalEnv):
         self.frames = []
         self.url = 'http://baffin.csail.mit.edu:5000'
         self.save_idx = 0
+
+
 
 
     @property
@@ -248,6 +255,7 @@ class RobotEnv(gym.GoalEnv):
         }
 
     def _set_action(self, action):
+        import pdb; pdb.set_trace()
         assert action.shape == (4,)
         action = action.copy()  # ensure that we don't change the action outside of this scope
         pos_ctrl, gripper_ctrl = action[:3], action[3]
