@@ -101,7 +101,6 @@ class RobotEnv(gym.GoalEnv):
         # print('I just saved to', prefix+str(next_idx))
 
         reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
-        import pdb; pdb.set_trace()
         return obs, reward, done, info
 
     def reset(self):
