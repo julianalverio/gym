@@ -7,6 +7,7 @@ import cv2
 
 import sys
 sys.path.insert(0, '/storage/jalverio/sentence-tracker/st')
+import pdb; pdb.set_trace()
 
 import gym
 from gym import error, spaces
