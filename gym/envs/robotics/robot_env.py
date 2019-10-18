@@ -254,7 +254,7 @@ class RobotEnv(gym.GoalEnv):
         }
 
     def _set_action(self, action):
-        import pdb; pdb.set_trace()
+        action = np.squeeze(action)
         assert action.shape == (4,)
         action = action.copy()  # ensure that we don't change the action outside of this scope
         pos_ctrl, gripper_ctrl = action[:3], action[3]
