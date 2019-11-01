@@ -63,7 +63,8 @@ class RobotEnv(gym.GoalEnv):
         }
         self.trajectory = []
         self.frames = []
-        self.url = 'http://melville.csail.mit.edu:5000'
+        # self.url = 'http://melville.csail.mit.edu:5000'
+        self.url = 'http://localhost:5000'
         self.save_idx = 0
 
 
@@ -150,9 +151,6 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            if len(self.frames) <= 8:
-                return np.float32(0.)
-
             frames = np.array(self.sample_frames(self.frames))
             data = {'images': frames.tolist()}
             result = requests.post(self.url, json=data)
@@ -168,13 +166,21 @@ class RobotEnv(gym.GoalEnv):
             return -d
 
     def sample_frames(self, frames, n=8):
-        bin_width = int(len(frames) / n - 1)
-        idxs = bin_width * np.array(list(range(n)))
-        sampled_frames = []
-        for idx in idxs:
-            sampled_frames.append(frames[idx])
-        assert len(sampled_frames) == n
-        return sampled_frames
+        if len(frames) > n:
+            bin_width = int(len(frames) / n - 1)
+            idxs = bin_width * np.array(list(range(n)))
+            sampled_frames = []
+            for idx in idxs:
+                sampled_frames.append(frames[idx])
+            assert len(sampled_frames) == n
+            return sampled_frames
+        elif len(frames) == 8:
+            return frames
+        else:
+            frames_needed = n - len(frames)
+            last_frame = frames[-1]
+            [frames.append(last_frame) for _ in range(frames_needed)]
+            return frames
 
     def render(self, mode='human', width=DEFAULT_SIZE, height=DEFAULT_SIZE):
         self._render_callback()
@@ -293,7 +299,7 @@ class RobotEnv(gym.GoalEnv):
         self.sim.forward()
 
         # Move end effector into position.
-        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extra_height]) + self.sim.data.get_site_xpos('robot0:grip')
+        gripper_target = np.array([-0.498, 0.005, -0.431 + self.gripper_extrar_height]) + self.sim.data.get_site_xpos('robot0:grip')
         gripper_rotation = np.array([1., 0., 1., 0.])
         self.sim.data.set_mocap_pos('robot0:mocap', gripper_target)
         self.sim.data.set_mocap_quat('robot0:mocap', gripper_rotation)
