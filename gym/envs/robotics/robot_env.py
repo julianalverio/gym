@@ -13,6 +13,7 @@ from gym import error, spaces
 from gym.utils import seeding
 import pickle
 from cv2 import VideoWriter, VideoWriter_fourcc
+from cStringIO import StringIO
 
 try:
     import mujoco_py
@@ -150,14 +151,15 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            # import time
-            # start = time.time()
-            # send_frames = [frame.tolist() for frame in self.sample_frames(self.frames)]
+            import pdb; pdb.set_trace()
+            # check the type of the frames and how to concat them
             frames = np.array(self.sample_frames(self.frames))
             data = {'images': frames.tolist()}
-            # end = time.time()
-            # print(end - start)
-            # import pdb; pdb.set_trace()
+
+            # f = StringIO()
+            # np.savez_compressed(f, frame=send_images)
+            # f.seek(0)
+            # out = f.read()
 
             result = requests.post(self.url, json=data)
             reward = float(result.text)
