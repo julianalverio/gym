@@ -22,11 +22,6 @@ except ImportError as e:
 DEFAULT_SIZE = 500
 
 
-class ShapeHolder(object):
-    def __init__(self, shape=None):
-        self.shape = shape
-
-
 class RobotEnv(gym.GoalEnv):
     def __init__(self, gripper_extra_height, block_gripper, has_object, target_in_the_air, target_offset, obj_range,
                  target_range, distance_threshold, reward_type, model_path, n_substeps, n_actions, initial_qpos):
