@@ -6,7 +6,7 @@ import os
 import cv2
 
 import sys
-sys.path.insert(0, '/storage/jalverio/sentence-tracker/st')
+sys.path.insert(0, '/storage/jalverio/sentence_tracker/st')
 from st import load_model, load_detector
 from generate_tracks import IncompleteTrackException
 
