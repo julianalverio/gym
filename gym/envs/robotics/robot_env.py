@@ -159,7 +159,7 @@ class RobotEnv(gym.GoalEnv):
             # start = time.time()
             # send_frames = [frame.tolist() for frame in self.sample_frames(self.frames)]
             frames = np.array(self.sample_frames(self.frames))
-            data = {'images': frames}
+            data = {'images': frames.tolist()}
             # end = time.time()
             # print(end - start)
             # import pdb; pdb.set_trace()
