@@ -13,7 +13,7 @@ from gym import error, spaces
 from gym.utils import seeding
 import pickle
 from cv2 import VideoWriter, VideoWriter_fourcc
-from cStringIO import StringIO
+# from cStringIO import StringIO
 
 try:
     import mujoco_py
@@ -159,8 +159,7 @@ class RobotEnv(gym.GoalEnv):
             # f = StringIO()
             # np.savez_compressed(f, frame=send_images)
             # f.seek(0)
-            # out = f.read()
-
+            # out = f.read(
             result = requests.post(self.url, json=data)
             reward = float(result.text)
             if reward == 1.:
