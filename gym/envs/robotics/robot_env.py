@@ -63,8 +63,8 @@ class RobotEnv(gym.GoalEnv):
         }
         self.trajectory = []
         self.frames = []
-        # self.url = 'http://melville.csail.mit.edu:5000'
-        self.url = 'http://localhost:5000'
+        self.url = 'http://melville.csail.mit.edu:5000'
+        # self.url = 'http://localhost:5000'
         self.save_idx = 0
 
 
@@ -155,14 +155,14 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            import time
-            start = time.time()
-            send_frames = [frame.tolist() for frame in self.sample_frames(self.frames)]
+            # import time
+            # start = time.time()
+            # send_frames = [frame.tolist() for frame in self.sample_frames(self.frames)]
             frames = np.array(self.sample_frames(self.frames))
-            data = {'images': send_frames}
-            end = time.time()
-            print(end - start)
-            import pdb; pdb.set_trace()
+            data = {'images': frames}
+            # end = time.time()
+            # print(end - start)
+            # import pdb; pdb.set_trace()
 
             result = requests.post(self.url, json=data)
             reward = float(result.text)
