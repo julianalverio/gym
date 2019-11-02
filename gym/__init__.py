@@ -1,5 +1,3 @@
-import fetch_gym as gym
-
 import distutils.version
 import os
 import sys
