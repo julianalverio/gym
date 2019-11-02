@@ -155,9 +155,14 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            import pdb; pdb.set_trace()
+            import time
+            start = time.time()
             frames = np.array(self.sample_frames(self.frames))
             data = {'images': frames.tolist()}
+            end = time.time()
+            print(end - start)
+            import pdb; pdb.set_trace()
+
             result = requests.post(self.url, json=data)
             reward = float(result.text)
             if reward == 1.:
