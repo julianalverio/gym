@@ -7,20 +7,19 @@ import cv2
 
 import sys
 sys.path.insert(0, '/storage/jalverio/sentence-tracker/st')
+from st import load_model, load_detector
+from generate_tracks import IncompleteTrackException
 
 import gym
 from gym import error, spaces
 from gym.utils import seeding
 import pickle
 from cv2 import VideoWriter, VideoWriter_fourcc
-# from cStringIO import StringIO
 
 try:
     import mujoco_py
 except ImportError as e:
     raise error.DependencyNotInstalled("{}. (HINT: you need to install mujoco_py, and also perform the setup instructions here: https://github.com/openai/mujoco-py/.)".format(e))
-
-DEFAULT_SIZE = 500
 
 
 class RobotEnv(gym.GoalEnv):
@@ -60,8 +59,16 @@ class RobotEnv(gym.GoalEnv):
         self.trajectory = []
         self.frames = []
         # self.url = 'http://melville.csail.mit.edu:5000'
-        self.url = 'http://localhost:5000'
+        # self.url = 'http://localhost:5000'
         self.save_idx = 0
+
+        DETECTOR_ROBOT_PATH = '/storage/jalverio/sentence-tracker/robot/detector'
+        # robot_path = '/storage/jalverio/sentence-tracker/models/2019-08-01-19-05-robot.pkl'
+        # robot_path = '/storage/jalverio/models_from_baffin/2019-08-01-19-05-robot.pkl'
+        robot_path = '/storage/jalverio/sentence_tracker/models/2019-08-01-19-05-robot.pkl'
+        self.model = load_model(model_path=robot_path)
+        self.detector = load_detector(DETECTOR_ROBOT_PATH, True)
+        self.threshold = -10000
 
 
 
@@ -151,6 +158,29 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
+            import pdb; pdb.set_trace()
+            # will need to cast to uint8
+            frames = self.sample_frames(self.frames)
+            try:
+                result = self.model.viterbi_given_frames(self.detector, 'The robot picked up the cube', frames)
+                import pdb; pdb.set_trace()
+                # check this logic
+                if np.any(result.results[-1].final_state_likelihoods < self.threshold):
+                    reward = -1.
+                else:
+                    state = np.argmax(result.results[-1].final_state_likelihoods)
+                    num_states = result.results[-1].num_states
+                    reward = state / (num_states - 1)
+            except IncompleteTrackException:
+                print('Incomplete track exception.')
+                reward = 0.
+
+        import pdb; pdb.set_trace()
+        # make sure everything is good up to here
+
+
+
+
             # check the type of the frames and how to concat them
             frames = np.array(self.sample_frames(self.frames))
             data = {'images': frames.tolist()}
@@ -188,7 +218,7 @@ class RobotEnv(gym.GoalEnv):
             [frames.append(last_frame) for _ in range(frames_needed)]
             return frames
 
-    def render(self, mode='human', width=DEFAULT_SIZE, height=DEFAULT_SIZE):
+    def render(self, mode='human', width=500, height=500):
         self._render_callback()
         if mode == 'rgb_array':
             self._get_viewer(mode).render(width, height)
