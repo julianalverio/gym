@@ -175,28 +175,24 @@ class RobotEnv(gym.GoalEnv):
                 print('Incomplete track exception.')
                 reward = 0.
 
-        import pdb; pdb.set_trace()
-        # make sure everything is good up to here
-
-
-
-
-            # check the type of the frames and how to concat them
-            frames = np.array(self.sample_frames(self.frames))
-            data = {'images': frames.tolist()}
-
-            # f = StringIO()
-            # np.savez_compressed(f, frame=send_images)
-            # f.seek(0)
-            # out = f.read(
-            result = requests.post(self.url, json=data)
-            reward = float(result.text)
-            if reward == 1.:
-                self.save()
-            if reward == -1:
-                print('INCOMPLETE TRACK EXCEPTION')
-                reward = 0
-            return np.float32(reward)
+            import pdb; pdb.set_trace()
+            # make sure everything is good up to here
+        #     # check the type of the frames and how to concat them
+        #     frames = np.array(self.sample_frames(self.frames))
+        #     data = {'images': frames.tolist()}
+        #
+        #     # f = StringIO()
+        #     # np.savez_compressed(f, frame=send_images)
+        #     # f.seek(0)
+        #     # out = f.read(
+        #     result = requests.post(self.url, json=data)
+        #     reward = float(result.text)
+        #     if reward == 1.:
+        #         self.save()
+        #     if reward == -1:
+        #         print('INCOMPLETE TRACK EXCEPTION')
+        #         reward = 0
+        #     return np.float32(reward)
 
         else:
             return -d
