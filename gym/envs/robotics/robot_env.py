@@ -157,8 +157,9 @@ class RobotEnv(gym.GoalEnv):
         elif self.reward_type == 'visual':
             import time
             start = time.time()
+            send_frames = [frame.tolist() for frame in self.sample_frames(self.frames)]
             frames = np.array(self.sample_frames(self.frames))
-            data = {'images': frames.tolist()}
+            data = {'images': send_frames}
             end = time.time()
             print(end - start)
             import pdb; pdb.set_trace()
