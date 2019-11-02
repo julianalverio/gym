@@ -93,9 +93,13 @@ class RobotEnv(gym.GoalEnv):
             'is_success': self._is_success(obs['achieved_goal'], self.goal),
         }
 
+
+        # CORRECT. COMMENTING OUT FOR TESTING.
         if self.reward_type == 'visual':
             self.frames.append(self.render(mode='rgb_array'))
             self.trajectory.append(action)
+
+
         # prefix = '/storage/jalverio/robot_images/incomplete_track_videos/'
         # next_idx = max([int(x.replace('.npy', '')) for x in os.listdir(prefix)]) + 1
         # np.save(prefix + str(next_idx), np.array(self.frames))
@@ -151,6 +155,7 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
+            import pdb; pdb.set_trace()
             frames = np.array(self.sample_frames(self.frames))
             data = {'images': frames.tolist()}
             result = requests.post(self.url, json=data)
