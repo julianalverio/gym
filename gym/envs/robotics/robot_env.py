@@ -151,7 +151,6 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            import pdb; pdb.set_trace()
             # check the type of the frames and how to concat them
             frames = np.array(self.sample_frames(self.frames))
             data = {'images': frames.tolist()}
