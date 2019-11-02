@@ -58,8 +58,8 @@ class RobotEnv(gym.GoalEnv):
         }
         self.trajectory = []
         self.frames = []
-        self.url = 'http://melville.csail.mit.edu:5000'
-        # self.url = 'http://localhost:5000'
+        # self.url = 'http://melville.csail.mit.edu:5000'
+        self.url = 'http://localhost:5000'
         self.save_idx = 0
 
 
