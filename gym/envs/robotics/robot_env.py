@@ -62,7 +62,7 @@ class RobotEnv(gym.GoalEnv):
         # self.url = 'http://localhost:5000'
         self.save_idx = 0
 
-        DETECTOR_ROBOT_PATH = '/storage/jalverio/sentence-tracker/robot/detector'
+        DETECTOR_ROBOT_PATH = '/storage/jalverio/sentence_tracker/robot/detector'
         # robot_path = '/storage/jalverio/sentence-tracker/models/2019-08-01-19-05-robot.pkl'
         # robot_path = '/storage/jalverio/models_from_baffin/2019-08-01-19-05-robot.pkl'
         robot_path = '/storage/jalverio/sentence_tracker/models/2019-08-01-19-05-robot.pkl'
