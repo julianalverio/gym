@@ -160,10 +160,10 @@ class RobotEnv(gym.GoalEnv):
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
             frames = self.sample_frames(self.frames)
-            start = time.time()
             try:
-                print(time.time() - start)
+                start = time.time()
                 result = self.model.viterbi_given_frames(self.detector, 'The robot picked up the cube', frames)
+                print(time.time() - start)
                 if np.any(result.results[-1].final_state_likelihoods < self.threshold):
                     reward = 0.
                 else:
