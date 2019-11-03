@@ -28,7 +28,7 @@ class TimeLimit(Wrapper):
 
     def step(self, action):
         assert self._episode_started_at is not None, "Cannot call env.step() before calling reset()"
-        observation, reward, done, info = self.env.step(action)
+        observation, reward, done, info, likelihood = self.env.step(action)
         self._elapsed_steps += 1
 
         if self._past_limit():
@@ -36,7 +36,7 @@ class TimeLimit(Wrapper):
                 _ = self.reset() # automatically reset the env
             done = True 
 
-        return observation, reward, done, info
+        return observation, reward, done, info, likelihood
 
     def reset(self):
         self._episode_started_at = time.time()
