@@ -71,9 +71,6 @@ class RobotEnv(gym.GoalEnv):
         self.detector = load_detector(DETECTOR_ROBOT_PATH, True)
         self.threshold = -10000
 
-
-
-
     @property
     def dt(self):
         return self.sim.model.opt.timestep * self.sim.nsubsteps
@@ -100,6 +97,7 @@ class RobotEnv(gym.GoalEnv):
 
         # CORRECT. COMMENTING OUT FOR TESTING.
         if self.reward_type == 'visual':
+            import pdb; pdb.set_trace()
             self.frames.append(self.render(mode='rgb_array'))
             self.trajectory.append(action)
 
