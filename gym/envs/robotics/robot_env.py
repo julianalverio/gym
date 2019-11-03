@@ -158,15 +158,11 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
-            import pdb; pdb.set_trace()
-            # will need to cast to uint8
             frames = self.sample_frames(self.frames)
             try:
                 result = self.model.viterbi_given_frames(self.detector, 'The robot picked up the cube', frames)
-                import pdb; pdb.set_trace()
-                # check this logic
                 if np.any(result.results[-1].final_state_likelihoods < self.threshold):
-                    reward = -1.
+                    reward = 0.
                 else:
                     state = np.argmax(result.results[-1].final_state_likelihoods)
                     num_states = result.results[-1].num_states
@@ -175,25 +171,9 @@ class RobotEnv(gym.GoalEnv):
                 print('Incomplete track exception.')
                 reward = 0.
 
-            import pdb; pdb.set_trace()
-            # make sure everything is good up to here
-        #     # check the type of the frames and how to concat them
-        #     frames = np.array(self.sample_frames(self.frames))
-        #     data = {'images': frames.tolist()}
-        #
-        #     # f = StringIO()
-        #     # np.savez_compressed(f, frame=send_images)
-        #     # f.seek(0)
-        #     # out = f.read(
-        #     result = requests.post(self.url, json=data)
-        #     reward = float(result.text)
-        #     if reward == 1.:
-        #         self.save()
-        #     if reward == -1:
-        #         print('INCOMPLETE TRACK EXCEPTION')
-        #         reward = 0
-        #     return np.float32(reward)
-
+            if reward == 1.:
+                self.save()
+            return np.float32(reward)
         else:
             return -d
 
