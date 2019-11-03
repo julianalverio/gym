@@ -97,7 +97,6 @@ class RobotEnv(gym.GoalEnv):
 
         # CORRECT. COMMENTING OUT FOR TESTING.
         if self.reward_type == 'visual':
-            import pdb; pdb.set_trace()
             self.frames.append(self.render(mode='rgb_array'))
             self.trajectory.append(action)
 
