@@ -109,8 +109,8 @@ class RobotEnv(gym.GoalEnv):
         # np.save(prefix + str(next_idx), np.array(self.frames))
         # print('I just saved to', prefix+str(next_idx))
 
-        reward = self.compute_reward(obs['achieved_goal'], self.goal, info)
-        return obs, reward, done, info
+        reward, likelihood = self.compute_reward(obs['achieved_goal'], self.goal, info)
+        return obs, reward, done, info, likelihood
 
     def reset(self):
         # Attempt to reset the simulator. Since we randomize initial conditions, it
@@ -162,19 +162,19 @@ class RobotEnv(gym.GoalEnv):
             frames = self.sample_frames(self.frames)
             try:
                 result = self.model.viterbi_given_frames(self.detector, 'The robot picked up the cube', frames)
-                if np.any(result.results[-1].final_state_likelihoods < self.threshold):
-                    reward = 0.
-                else:
-                    state = np.argmax(result.results[-1].final_state_likelihoods)
-                    num_states = result.results[-1].num_states
-                    reward = state / (num_states - 1)
+                # if np.any(result.results[-1].final_state_likelihoods < self.threshold):
+                #     reward = 0.
+                # else:
+                state = np.argmax(result.results[-1].final_state_likelihoods)
+                num_states = result.results[-1].num_states
+                reward = state / (num_states - 1)
             except IncompleteTrackException:
                 print('Incomplete track exception.')
                 reward = 0.
 
             if reward == 1.:
                 self.save()
-            return np.float32(reward)
+            return np.float32(reward), min(result.results[-1].final_state_likelihoods)
         else:
             return -d
 
