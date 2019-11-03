@@ -15,6 +15,7 @@ from gym import error, spaces
 from gym.utils import seeding
 import pickle
 from cv2 import VideoWriter, VideoWriter_fourcc
+import time
 
 try:
     import mujoco_py
@@ -158,7 +159,9 @@ class RobotEnv(gym.GoalEnv):
         if self.reward_type == 'sparse':
             return -(d > self.distance_threshold).astype(np.float32)
         elif self.reward_type == 'visual':
+            start = time.time()
             frames = self.sample_frames(self.frames)
+            print(time.time() - start)
             try:
                 result = self.model.viterbi_given_frames(self.detector, 'The robot picked up the cube', frames)
                 if np.any(result.results[-1].final_state_likelihoods < self.threshold):
