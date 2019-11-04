@@ -126,7 +126,7 @@ class RobotEnv(gym.GoalEnv):
 
     def save(self):
         idx = self.save_idx
-        prefix = '/storage/jalverio/robot_images/successes/' + idx + '/'
+        prefix = '/storage/jalverio/robot_images/successes/' + str(idx) + '/'
         os.mkdir(prefix)
         print('saving success to:', prefix)
         with open(os.path.join(prefix, idx, 'frames'), 'wb') as pickle_file:
