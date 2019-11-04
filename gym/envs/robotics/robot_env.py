@@ -136,10 +136,10 @@ class RobotEnv(gym.GoalEnv):
         self.write_video(prefix)
         self.save_idx += 1
 
-    def write_video(frames, location):
+    def write_video(self, frames, location):
         FPS = 5.0
         height, width = frames[0].shape[:2]
-        fourcc = VideoWriter_fourcc(*'avc1')
+        # fourcc = VideoWriter_fourcc(*'avc1')
         video = VideoWriter('%s/fetch.avi' % location, 0, FPS, (width, height))
         for frame in frames:
             video.write(frame)
